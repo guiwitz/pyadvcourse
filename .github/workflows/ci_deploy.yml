@@ -3,7 +3,9 @@ name: CI
 on:
   push:
     branches:
-      - not #main
+      - main
+    tags:
+      - "v*"
   pull_request:
 
 jobs:
@@ -30,3 +32,31 @@ jobs:
 
       - name: Test
         run: pytest --color=yes
+
+  deploy:
+    name: Deploy
+    needs: test
+    if: success() && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: install
+        run: |
+          git tag
+          pip install -U pip build twine
+
+      - name: Build and publish
+        run: |
+          python -m build
+          twine upload --repository testpypi dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TWINE_API_KEY }}

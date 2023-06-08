@@ -1,6 +1,6 @@
 # https://peps.python.org/pep-0517/
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 # https://peps.python.org/pep-0621/
@@ -14,10 +14,10 @@ authors = [
     { email = "guillaume.witz@unibe.ch", name = "Guillaume Witz" },
 ]
 dynamic = ["version"]
-dependencies = []
+dependencies = ["pandas"]
 
 [tool.hatch.version]
-path = "src/pyadvcourse/__init__.py"
+source = "vcs"
 
 # extras
 # https://peps.python.org/pep-0621/#dependencies-optional-dependencies
